@@ -5,6 +5,7 @@ from constants import *
 import pygame
 from player import Player  # Add this import
 
+
 def main():
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
@@ -25,6 +26,8 @@ def main():
                 return
         screen.fill((0, 0, 0))
         
+
+        player.update(dt)
         # Draw the player here
         player.draw(screen)
         
