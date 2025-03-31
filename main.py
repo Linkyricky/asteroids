@@ -4,6 +4,8 @@
 from constants import *
 import pygame
 from player import Player  # Add this import
+from asteroid import Asteroid  # Add this import
+from asteroidfield import AsteroidField  # Add this import
 
 
 def main():
@@ -12,24 +14,37 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     
-    # Create player instance here
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    # Create groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
+    # Set containers
+    Player.containers = (updatable, drawable)
+    Asteroid.containers = (asteroids, updatable, drawable)
+    AsteroidField.containers = (updatable,)
     
+    # Create player instance
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    asteroid_field = AsteroidField()
     clock = pygame.time.Clock()
-
+    
     # Delta time variable
     dt = 0
 
+    # Game loop
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+        
         screen.fill((0, 0, 0))
         
-
-        player.update(dt)
-        # Draw the player here
-        player.draw(screen)
+        # Update all updatable objects
+        updatable.update(dt)
+        
+        # Draw all drawable objects
+        for entity in drawable:
+            entity.draw(screen)
         
         pygame.display.flip()
         dt = clock.tick(60) / 1000
